@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction à Docker - @Ausy 09/11/2016</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      li p { line-height: 1.25em; }
+      .red { color: #fa0000; }
+      .large { font-size: 2em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-code-line-highlighted     { background-color: #373832; }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+      #slideshow .slide .content code {
+        font-size: 0.8em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+      }
+      .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+      }
+      .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+      }
+
+      /* Slide-specific styling */
+      #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+      }
+      #slide-how .slides {
+        font-size: 0.9em;
+        position: absolute;
+        top:  151px;
+        right: 140px;
+      }
+      #slide-how .slides h3 {
+        margin-top: 0.2em;
+      }
+      #slide-how .slides .first, #slide-how .slides .second {
+        padding: 1px 20px;
+        height: 90px;
+        width: 120px;
+        -moz-box-shadow: 0 0 10px #777;
+        -webkit-box-shadow: 0 0 10px #777;
+        box-shadow: 0 0 10px #777;
+      }
+      #slide-how .slides .first {
+        background: #fff;
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        z-index: 1;
+      }
+      #slide-how .slides .second {
+        position: relative;
+        background: #fff;
+        z-index: 0;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
+      img[alt=DockerTitleLogo] { width: 420px; }
+      img[alt=AusyLogo] { margin-bottom: 40px; width: 280px; }
+      img[alt=CGroups] { width: 720px; }
+      img[alt=BuildShipRun] { width: 750px; }
+      img[alt=DockerPrincipe] { width: 500px; }
+      img[alt=DockerIsolation] { width: 600px; }
+      img[alt=Structure] { width: 600px; }
+      img[alt=Concepts] { width: 750px; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+# Introduction à Docker
+![DockerTitleLogo](images/docker-large-h-trans.png)
+![AusyLogo](images/Logo_Ausy.png)
+### par [Thomas Sarboni](mailto:max-k@post.com)
+.footnote[Shake Your Brain<br />.red[©] [Ausy](http://www.ausy.fr) 2016]
+---
+# Le conteneur
+---
+layout: false
+## Isolation d'un sous-ensemble du système
+ - Système de fichiers
+ - Processus
+ - Utilisateurs
+ - Réseaux
+ - Mémoire vive
+ - CPU
+![CGroups](images/diagram.png)
+.right[[source](https://mairin.wordpress.com/2011/05/13/ideas-for-a-cgroups-ui/)]
+---
+template: inverse
+# Conteneur VS machine virtuelle
+---
+template: inverse
+## Légerté
+
+![ContVSVirt](images/MJHfm1c.jpg)
+
+.right[[source](http://www.infoworld.com/article/3072929/linux/containers-101-linux-containers-and-docker-explained.html)]
+---
+template: inverse
+## Vitesse de démarrage
+
+![StartupTime](images/performance-of-docker-vs-vms-15-638.jpg)
+.right[[source](http://www.slideshare.net/Flux7Labs/performance-of-docker-vs-vms)]
+---
+template: inverse
+# Cas d'usage
+---
+## Développement d'application en local
+## Collaboration au sein d'une équipe de développement
+## Intégration continue et tests
+## Déploiement d'applications en production
+## Création d'une plateforme de service
+## ...
+---
+template: inverse
+# Philosophie
+---
+template: inverse
+## Build, ship and run any app, anywhere
+
+![BuildShipRun](images/docker-build-ship-run.png)
+.right[[source](http://www.slideshare.net/cm13/introduction-to-docker-48784005)]
+---
+template: inverse
+## Boite noire
+
+![BoiteNoire](images/docker-3.jpg)
+.right[[source](http://www.virtu-desk.fr/blog/le-cloud/docker-on-ne-virtualise-plus-on-containerise.html)]
+---
+template: inverse
+## Micro-services
+
+![MicroServices](images/alter-ways-digitalks-docker-des-conteneurs-pour-tout-faire-50-638.jpg)
+.right[[source](https://help.mypurecloud.com/articles/microservice/)]
+---
+template: inverse
+# Sous le capot
+---
+template: inverse
+## Principe général
+
+![DockerPrincipe](images/1*E8KZJNl21-f1Fb93zgwPWA.jpeg)
+.right[[source](https://medium.com/aws-activate-startup-blog/a-better-dev-test-experience-docker-and-aws-291da5ab1238#.e103wu5ew)]
+---
+template: inverse
+## Plus en détail
+
+![DockerIsolation](images/Docker+and+Kernel+.png)
+.right[[source](http://blog.etsukata.com/2014/05/docker-linux-kernel.html)]
+---
+template: inverse
+# Docker, qu'est-ce que c'est ?
+---
+layout: false
+## Ensemble d'outils de gestion de conteneurs
+ - Service de gestion
+ - Client en ligne de commandes
+ - API REST
+
+## Espace d'échange d'images en ligne
+ - Interface web [hub.docker.com](https://hub.docker.com)
+ - Accès ligne de command (docker search, docker pull, ...)
+
+## Ensemble d'outils complémentaires
+ - Docker [registry](https://docs.docker.com/registry/)
+ - Docker [swarm](https://docs.docker.com/swarm/)
+ - Docker [compose](https://docs.docker.com/compose/)
+---
+template: inverse
+## Fonctionnement de Docker
+
+![Structure](images/usdk_0401.png)
+.right[[source](https://www.safaribooksonline.com/library/view/using-docker/9781491915752/ch04.html)]
+---
+template: inverse
+# Les concepts
+---
+template: inverse
+
+![Concepts](images/Docker2.png)
+.right[[source](http://alandargan.com/using-vagrant-docker/)]
+---
+layout: false
+## Les conteneurs
+ - Contiennent une plusieurs application(s)
+ - Contiennent également l'environnement d'exécution
+ - Peuventt être en cours de fonctionnement ou stoppés
+
+## Les images
+ - Sont constituées d'un ensemble de couches
+ - Servent de base à la création de tout conteneur Docker
+ - Peuvent être taggées à l'aide d'un nom et d'une version
+
+## Les volumes
+ - Permettent de gérer la persistence des données
+ - Permettent également de partager des données entre conteneurs
+---
+template: inverse
+# Cycle de vie du conteneur
+---
+template: inverse
+
+![DockerIsolation](images/docker-cycle.png)
+.right[[source](http://blog2dev.blogspot.fr/2014/06/docker-mise-en-pratique.html)]
+---
+template: inverse
+# Ok c'est bien joli tout ça mais comment ça marche ?
+---
+layout: false
+# Premiers pas
+.left-column[
+## Dockerfile
+]
+.right-column[
+
+### Premier exemple
+```.dockerfile
+FROM debian:jessie
+MAINTAINER Thomas Sarboni <tsarboni@linagora.com>
+RUN apt-get update && apt-get install vim -y
+RUN echo "Hello World !!"
+CMD ['sh']
+```
+Construisons l'image correspondant à ce fichier
+
+```.bash
+$ docker build -t first .
+```
+
+.footnote[
+Plus d'infos ? [Dockerfile reference](https://docs.docker.com/engine/reference/builder/)]
+]
+---
+layout: false
+# Premiers pas
+.left-column[
+## Dockerfile
+## Le build
+]
+.right-column[
+```.bash
+Sending build context to Docker daemon 2.048 kB
+Step 1 : FROM debian:jessie
+jessie: Pulling from library/debian
+7268d8f794c4: Already exists 
+a3ed95caeb02: Already exists 
+Digest: sha256:f4261eae2011306946bca423ae16940467fa6bee6e9c2c549189d9d83ca22112
+Status: Downloaded newer image for debian:jessie
+ ---> 256adf7015ca
+Step 2 : MAINTAINER Thomas Sarboni <tsarboni@linagora.com>
+ ---> Using cache
+ ---> 4bb014437010
+Step 3 : RUN apt-get update && apt-get install vim -y
+ ---> Using cache
+ ---> a6f5e5323805
+Step 4 : RUN echo "Hello World !!"
+ ---> Using cache
+ ---> 7aef530bceb5
+Successfully built 7aef530bceb5
+```
+]
+---
+layout: false
+# Premiers pas
+.left-column[
+## Dockerfile
+## Le build
+## Les couches
+]
+.right-column[
+
+### Seules les couches modifiées sont reconstruites
+
+```.bash
+Sending build context to Docker daemon 2.048 kB
+Step 1 : FROM debian:jessie
+ ---> 256adf7015ca
+Step 2 : MAINTAINER Thomas Sarboni <tsarboni@linagora.com>
+ ---> Using cache
+ ---> 4bb014437010
+Step 3 : RUN apt-get update && apt-get install vim -y
+ ---> Using cache
+ ---> a6f5e5323805
+Step 4 : RUN echo "Hello Universe !!"
+ ---> Running in db7c94e6e684
+ ---> 5754eea7b257
+Removing intermediate container db7c94e6e684
+Successfully built 5754eea7b257
+```
+]
+---
+layout: false
+# Premiers pas
+.left-column[
+## Dockerfile
+## Le build
+## Les couches
+## Le run
+]
+.right-column[
+
+### Lançons un conteneur en mode interactif
+
+```.bash
+$ docker run -ti first
+root@303253abb965:/#
+```
+### Lançons un conteneur en mode démon
+
+```.bash
+$ docker run -d mkodockx/docker-clamav
+9daf2c9d55d0cb5ac98b25341e9abe71de456ae25d81856705ba71d6f5d09b52
+```
+.footnote[Un conteneur s'arrête dès que la commande qui lance se termine]
+
+]
+---
+layout: false
+# Premiers pas
+.left-column[
+## Dockerfile
+## Le build
+## Les couches
+## Le run
+## Processus
+]
+.right-column[
+
+### Regardons nos conteneurs en cours d'exécution
+
+```.bash
+$ docker ps
+CONTAINER ID        IMAGE                    COMMAND             CREATED             STATUS              PORTS               NAMES
+9daf2c9d55d0        mkodockx/docker-clamav   "/bootstrap.sh"     2 minutes ago       Up 2 minutes        3310/tcp            pedantic_mccarthy
+```
+
+### Connectons nous à notre conteneur
+
+```.bash 
+$ docker exec -ti pedantic_mccarthy /bin/bash
+``` 
+]
+---
+layout: false
+# Premiers pas
+.left-column[
+## Dockerfile
+## Le build
+## Les couches
+## Le run
+## Processus
+## Connexion
+]
+.right-column[
+
+### Regardons les logs de notre conteneur
+
+```.bash 
+$ docker logs pedantic_mccarthy
+```
+
+### Connectons nous à notre conteneur
+
+```.bash 
+$ docker exec -ti pedantic_mccarthy /bin/bash
+root@9daf2c9d55d0:/# 
+```
+]
+---
+layout: false
+# Un peu plus loin
+.left-column[
+## Les données
+]
+.right-column[
+
+### Reconnectons nous à notre conteneur
+```.bash
+$ docker exec -ti pedantic_mccarthy /bin/bash
+root@9daf2c9d55d0:/# dpkg -l |grep vim
+root@9daf2c9d55d0:/# apt-get update && apt-get install vim -y
+[...]
+```
+### Les données sont persistées tant que le conteneur tourne
+```.bash 
+$ docker exec -ti pedantic_mccarthy /bin/bash
+root@9daf2c9d55d0:/# dpkg -l |grep vim
+ii  vim                      2:7.3.547-7              amd64        Vi IMproved - enhanced vi editor
+ii  vim-common               2:7.3.547-7              amd64        Vi IMproved - Common files
+ii  vim-runtime              2:7.3.547-7              all          Vi IMproved - Runtime files
+```
+]
+---
+layout: false
+# Un peu plus loin
+.left-column[
+## Les données
+## Images 1
+]
+.right-column[
+
+### Listons nos images
+```.bash
+$ docker images
+[...]
+first                        latest              1020201b7049        44 minutes ago      163.4 MB
+debian                       jessie              256adf7015ca        38 hours ago        125.1 MB
+[...]
+```
+### Supprimons une image
+```.bash
+$ docker rmi first
+Failed to remove image (first): Error response from daemon: conflict: unable to remove repository reference "first" (must force) - container 82c19b3a90a9 is using its referenced image 1020201b7049
+```
+]
+---
+layout: false
+# Un peu plus loin
+.left-column[
+## Les données
+## Images 1
+## Images 2
+]
+.right-column[
+
+## Un conteneur doit d'abord être supprimé
+```.bash
+$ docker ps -a | grep 82c19b3a90a9
+82c19b3a90a9        first                    "/bin/bash"              46 minutes ag  o      Exited (0) 46 minutes ago                         focused_lumiere
+$ docker rm 82c19b3a90a9
+82c19b3a90a9
+```
+
+## Sinon, on peut forcer la suppression
+
+```.bash
+$ docker rmi -f first
+Untagged: first:latest
+Deleted: sha256:1020201b7049d8ef1294be2851d04f561248cc4506e7aa1e67791afc4f68772a
+``` 
+]
+---
+layout: false
+# Un peu plus loin
+.left-column[
+## Les données
+## Images 1
+## Images 2
+## Volumes 1
+]
+.right-column[
+
+## On peut attacher un volume à conteneur au lancement
+```.bash
+$ docker run -v ${PWD}/data:/target centos:6
+```
+## Ou le spécifier directement dans le Dockerfile
+```.bash
+FROM debian:jessie
+VOLUME /data
+```
+]
+---
+layout: false
+# Un peu plus loin
+.left-column[
+## Les données
+## Images 1
+## Images 2
+## Volumes 1
+## Volumes 2
+]
+.right-column[
+
+## Les données sont stockées indépendamment
+```.bash
+$ docker inspect b52e5b25d662
+[...]
+    "Mounts": [
+        {
+            "Name": "6a991ea1b699d04bcfe27a82e95d1971810d706315bfda6c3cdc3ecf9b5f5612",
+            "Source": "/var/lib/docker/volumes/6a991ea1b699d04bcfe27a82e95d1971810d706315bfda6c3cdc3ecf9b5f5612/_data",
+            "Destination": "/data",
+            "Driver": "local",
+            "Mode": "",
+            "RW": true,
+        }
+    ],
+[...]
+```
+]
+---
+layout: false
+# Un peu plus loin
+.left-column[
+## Les données
+## Images 1
+## Images 2
+## Volumes 1
+## Volumes 2
+## Volumes 3
+]
+.right-column[
+
+## On peut également connecter un volume local à un conteneur
+```.bash
+$ docker run -v ${PWD}/data:/target centos:6
+```
+## Dans ce cas, les données contenues dans la cible ne sont pas copiées dans le volume
+]
+---
+name: last-page
+template: inverse
+## That's all folks (for now)!
+
+Présentation créée avec [remark](http://github.com/gnab/remark).
+
+[https://github.com/max-k/prez-docker-ausy](https://github.com/max-k/prez-docker-ausy)
+    </textarea>
+    <script src="js/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
